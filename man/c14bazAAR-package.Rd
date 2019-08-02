@@ -12,20 +12,26 @@ Query different C14 date databases and apply basic data cleaning, merging and ca
 Useful links:
 \itemize{
   \item \url{https://github.com/ISAAKiel/c14bazAAR}
+  \item Report bugs at \url{https://github.com/ISAAKiel/c14bazAAR/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Clemens Schmid \email{clemens@nevrome.de} [copyright holder]
+\strong{Maintainer}: Clemens Schmid \email{clemens@nevrome.de} (0000-0003-3448-5715) [copyright holder]
 
 Authors:
 \itemize{
-  \item Dirk Seidensticker \email{dirk.seidensticker@gmail.com}
-  \item Daniel Knitter \email{knitter@geographie.uni-kiel.de}
-  \item Martin Hinz \email{martin.hinz@ufg.uni-kiel.de}
-  \item David Matzig
-  \item Wolfgang Hamer \email{hamer@geographie.uni-kiel.de}
+  \item Dirk Seidensticker \email{dirk.seidensticker@gmail.com} (0000-0002-8155-7702)
+  \item Daniel Knitter \email{knitter@geographie.uni-kiel.de} (0000-0003-3014-4497)
+  \item Martin Hinz \email{martin.hinz@iaw.unibe.ch} (0000-0002-9904-6548)
+  \item David Matzig \email{matzigdavid@gmail.com} (0000-0001-7349-5401)
+  \item Wolfgang Hamer \email{hamer@geographie.uni-kiel.de} (0000-0002-5943-5020)
   \item Kay Schmütz \email{kschmuetz@ufg.uni-kiel.de}
+}
+
+Other contributors:
+\itemize{
+  \item Nils Mueller-Scheessel \email{nils.mueller-scheessel@ufg.uni-kiel.de} (0000-0001-7992-8722) [contributor]
 }
 
 }

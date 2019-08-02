@@ -6,8 +6,9 @@
 #'
 #' @description The \strong{c14_date_list} is the central data structure of the
 #' \code{c14bazAAR} package. It's a tibble with set of custom methods and
-#' variables. Please see \code{c14bazAAR::variable_reference} for a description
-#' of the variables. Further available variables are ignored. \cr
+#' variables. Please see the
+#' \href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+#' table for a description of the variables. Further available variables are ignored. \cr
 #' If an object is of class data.frame or tibble (tbl & tbl_df), it can be
 #' converted to an object of class \strong{c14_date_list}. The only requirement
 #' is that it contains the essential columns \strong{c14age} and \strong{c14std}.
@@ -51,10 +52,11 @@ as.c14_date_list <- function(x, ...) {
     if (all(present)) {
       # do the actual conversion!
       x %>%
-        `class<-`(c("c14_date_list", class(.))) %>%
+        tibble::new_tibble(., nrow = nrow(.), class = "c14_date_list") %>%
         c14bazAAR::order_variables() %>%
         c14bazAAR::enforce_types() %>%
         clean_latlon() %>%
+        clean_labnr() %>%
         return()
     } else {
       stop(
@@ -114,3 +116,6 @@ print.c14_date_list <- function(x, ...) {
   # add table printed like a tibble
   x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
 }
+
+#### accessor functions ####
+

@@ -5,6 +5,7 @@
 #' @return NULL - called for side effect stop()
 #'
 #' @keywords internal
+#' @noRd
 check_if_packages_are_available <- function(packages_ch) {
   if (
     packages_ch %>%
@@ -33,6 +34,7 @@ check_if_packages_are_available <- function(packages_ch) {
 #' @return data.frame with new column
 #'
 #' @keywords internal
+#' @noRd
 add_or_replace_column_in_df <- function(x, column_name_s, column_content_mi, ...) {
   if (column_name_s %in% colnames(x) %>% all) {
     x[[column_name_s]] <- column_content_mi
@@ -54,6 +56,7 @@ add_or_replace_column_in_df <- function(x, column_name_s, column_content_mi, ...
 #' @return NULL - called for side effect stop()
 #'
 #' @keywords internal
+#' @noRd
 check_if_columns_are_present <- function(x, columns) {
   if(columns %in% colnames(x) %>% all %>% `!`) {
     stop(
@@ -75,7 +78,9 @@ check_if_columns_are_present <- function(x, columns) {
 #'
 #' @return an object of class c14_date_list
 #'
+#' @rdname cleaning
 #' @keywords internal
+#' @noRd
 clean_latlon <- function(x) {
 
   if(all(c("lat", "lon") %in% colnames(x))) {
@@ -91,6 +96,40 @@ clean_latlon <- function(x) {
   return(x)
 }
 
+#' @rdname cleaning
+#' @keywords internal
+#' @noRd
+clean_labnr <- function(x) {
+
+  if ("labnr" %in% colnames(x)) {
+
+    # Testcode
+    # EUROEVOL -> x
+    # x$labnr[x$labnr %>% grepl("[-]", .) %>% `!`]
+
+    # case 1: simple labnr but no hyphen and no space z.B. Gd4438
+    without_space <- x[["labnr"]] %>%
+      grep("^[A-Z,a-z]+[0-9]+[A-Za-z]?$", .)
+    x[["labnr"]][without_space] <- x[["labnr"]][without_space] %>%
+      gsub("^([A-Za-z]+)([0-9]+)([A-Za-z]?)$", "\\1-\\2\\3", .)
+
+    # case 2: simple labnr but space instead of hyphen
+    without_hyphen <- x[["labnr"]] %>%
+      grep("^[A-Z,a-z]+\\s[0-9]+[A-Za-z]?$", .)
+    x[["labnr"]][without_hyphen] <- x[["labnr"]][without_hyphen] %>%
+      gsub("^([A-Za-z]+)(\\s)([0-9]+)([A-Za-z]?)$", "\\1-\\3\\4", .)
+
+    # case 3: simple labnr but double hyphens
+    double_hyphen <- x[["labnr"]] %>%
+      grep("^[A-Z,a-z]+--[0-9]+[A-Za-z]?$", .)
+    x[["labnr"]][double_hyphen] <- x[["labnr"]][double_hyphen] %>%
+      gsub("^([A-Za-z]+)(--)([0-9]+)([A-Za-z]?)$", "\\1-\\3\\4", .)
+
+  }
+
+  return(x)
+}
+
 #' check_connection_to_url
 #'
 #' @param db_url url string
@@ -98,6 +137,7 @@ clean_latlon <- function(x) {
 #' @return logical
 #'
 #' @keywords internal
+#' @noRd
 check_connection_to_url <- function(db_url) {
-  if (!RCurl::url.exists(db_url)) {stop(paste(db_url, "is not available. No internet connection?"))}
+  if (httr::http_error(db_url)) {stop(paste(db_url, "is not available. No internet connection?"))}
 }

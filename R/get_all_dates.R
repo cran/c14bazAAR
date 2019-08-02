@@ -1,12 +1,14 @@
 #### get_all_dates ####
 
 # name (get_dates) of documentation group has to be adjusted in alphabetically first element get_14SEA()
+
 #' @title Download radiocarbon source databases and convert them to a \strong{c14_date_list}
 #'
-#' @description This functions download source databases and adjust their variables to conform to the
-#' definition in \code{c14bazAAR::variable_reference}. That includes renaming and arranging
-#' the variables (with \code{c14bazAAR::order_variables()}) as well as type conversion
-#' (with \code{c14bazAAR::enforce_types()}) -- so all the steps undertaken by
+#' @description This functions downloads source databases and adjust their variables to conform to the
+#' definition in the
+#' \href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+#' table. That includes renaming and arranging the variables (with \code{c14bazAAR::order_variables()})
+#' as well as type conversion (with \code{c14bazAAR::enforce_types()}) -- so all the steps undertaken by
 #' \code{as.c14_date_list()}. \cr
 #' All databases require different downloading and data wrangling steps. Therefore
 #' there's a custom getter function for each of them. \cr
@@ -73,6 +75,7 @@ get_all_dates <- function() {
 #' @return vector with all parser functions in c14bazAAR
 #'
 #' @keywords internal
+#' @noRd
 get_all_parser_functions <- function() {
   c(
     c14bazAAR::get_14SEA,
@@ -80,10 +83,12 @@ get_all_parser_functions <- function() {
     c14bazAAR::get_AustArch,
     c14bazAAR::get_CalPal,
     c14bazAAR::get_CONTEXT,
+    c14bazAAR::get_EUBAR,
     c14bazAAR::get_EUROEVOL,
     c14bazAAR::get_RADON,
     c14bazAAR::get_RADONB,
-    c14bazAAR::get_KITEeastAfrica
+    c14bazAAR::get_KITEeastAfrica,
+    c14bazAAR::get_Palmisano
   ) %>%
     return()
 }

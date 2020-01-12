@@ -7,7 +7,7 @@
 #' @description The \strong{c14_date_list} is the central data structure of the
 #' \code{c14bazAAR} package. It's a tibble with set of custom methods and
 #' variables. Please see the
-#' \href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+#' \href{https://github.com/ropensci/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
 #' table for a description of the variables. Further available variables are ignored. \cr
 #' If an object is of class data.frame or tibble (tbl & tbl_df), it can be
 #' converted to an object of class \strong{c14_date_list}. The only requirement
@@ -22,22 +22,12 @@
 #' @rdname c14_date_list
 #'
 #' @examples
-#' # c14_date_list can be crafted manually:
 #' as.c14_date_list(data.frame(c14age = c(2000, 2500), c14std = c(30, 35)))
-#'
-#' # The c14_date_list class is stripped if
-#' # you apply functions to a c14_date_list
-#' # that return tibbles or data.frames.
-#' # You have to add the class again afterwards:
-#' library(magrittr)
-#' example_c14_date_list %>%
-#'   dplyr::filter(sourcedb == "CALPAL") %>%
-#'   as.c14_date_list()
-#'
 #' is.c14_date_list(5) # FALSE
 #' is.c14_date_list(example_c14_date_list) # TRUE
 #'
 #' print(example_c14_date_list)
+#' plot(example_c14_date_list)
 #'
 #' @export
 as.c14_date_list <- function(x, ...) {
@@ -83,22 +73,22 @@ is.c14_date_list <- function(x, ...) {"c14_date_list" %in% class(x)}
 format.c14_date_list <- function(x, ...) {
   out_str <- list()
   out_str$header <- paste0("\tRadiocarbon date list")
-  out_str$dates <- paste0("\t", "dates", "\t", "\t", nrow(x))
+  out_str$dates <- paste0("\t", "dates: ", nrow(x))
   if("site" %in% colnames(x)) {
-    out_str$sites <- paste0("\t", "sites", "\t", "\t", length(unique(x[["site"]])))
+    out_str$sites <- paste0("\t", "sites: ", length(unique(x[["site"]])))
   }
   if("country" %in% colnames(x)) {
-    out_str$country <- paste0("\t", "countries", "\t", length(unique(x[["country"]])))
+    out_str$country <- paste0("\t", "countries: ", length(unique(x[["country"]])))
   }
   if("c14age" %in% colnames(x)) {
     out_str$range_uncal <- paste0(
-      "\t", "uncalBP", "\t", "\t",
+      "\t", "uncalBP: ",
       round(max(x[["c14age"]], na.rm = TRUE), -2), " \u2015 ", round(min(x[["c14age"]], na.rm = TRUE), -2)
     )
   }
   if("calage" %in% colnames(x)) {
     out_str$range_cal <- paste0(
-      "\t", "calBP", "\t", "\t",
+      "\t", "calBP: ",
       round(max(x[["calage"]], na.rm = TRUE), -2), " \u2015 ", round(min(x[["calage"]], na.rm = TRUE), -2)
     )
   }
@@ -115,6 +105,61 @@ print.c14_date_list <- function(x, ...) {
   cat(format(x, ...), "\n\n")
   # add table printed like a tibble
   x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
+}
+
+#### plot ####
+
+#' @rdname c14_date_list
+#' @export
+plot.c14_date_list <- function(x, ...) {
+
+  check_if_packages_are_available("globe")
+
+  # store par settings
+  old.par <- graphics::par(no.readonly = TRUE)
+
+  # set plot layout
+  graphics::layout(matrix(c(1,2,3,3), 2, 2, byrow = TRUE))
+
+  # plot 1: text
+  header <- as.character(format(x)) %>%
+    strsplit("\n") %>% unlist %>%
+    sub("\t", "", .) %>%
+    sub("\t\t", "\t", .) %>%
+    trimws
+  graphics::plot(0, type = 'n', axes = FALSE, ann = FALSE, xlim = c(0, 1), ylim = c(length(header) + 1, 0))
+  for (i in 1:length(header)) {
+    if (i == 1) {
+      graphics::text(0, i, bquote(bold(.(header[i]))), adj = 0)
+    } else {
+      graphics::text(0, i, header[i], adj = 0)
+    }
+  }
+
+  # plot 2: globe
+  graphics::par(mar = c(0, 0, 0, 0))
+  globe::globeearth(eye = list(mean(x[["lon"]], na.rm = T), mean(x[["lat"]], na.rm = T)))
+  globe::globepoints(
+    loc = x[,c("lon", "lat")],
+    col = "red",
+    cex = 0.01,
+    pch = 20
+  )
+
+  # plot 3: histogram
+  graphics::par(mar = c(4.2, 4.2, 0, 0))
+  graphics::hist(
+    x[["c14age"]],
+    breaks = 100,
+    main = NULL,
+    xlim = rev(range(x[["c14age"]], na.rm = T)),
+    xlab = "Uncalibrated Age BP in years (c14age)",
+    ylab = "Amount of dates"
+  )
+
+
+  # reset par setting on exit
+  on.exit(graphics::par(old.par))
 }
 
 #### accessor functions ####

@@ -8,11 +8,9 @@
 \usage{
 enforce_types(x, suppress_na_introduced_warnings = TRUE)
 
-\method{enforce_types}{default}(x,
-  suppress_na_introduced_warnings = TRUE)
+\method{enforce_types}{default}(x, suppress_na_introduced_warnings = TRUE)
 
-\method{enforce_types}{c14_date_list}(x,
-  suppress_na_introduced_warnings = TRUE)
+\method{enforce_types}{c14_date_list}(x, suppress_na_introduced_warnings = TRUE)
 }
 \arguments{
 \item{x}{an object of class c14_date_list}
@@ -27,7 +25,21 @@ an object of class c14_date_list
 Enforce variable types in a \strong{c14_date_list} and remove
 everything that doesn't fit (e.g. text in a number field).
 See the
-\href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+\href{https://github.com/ropensci/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
 table for a documentation of the variable types.
 \code{enforce_types()} is called in \code{c14bazAAR::as.c14_date_list()}.
+}
+\examples{
+# initial situation
+ex <- example_c14_date_list
+class(ex$c14age)
+
+# modify variable/column type
+ex$c14age <- as.character(ex$c14age)
+class(ex$c14age)
+
+# fix type with enforce_types()
+ex <- enforce_types(ex)
+class(ex$c14age)
+
 }

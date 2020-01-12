@@ -6,6 +6,7 @@
 \alias{is.c14_date_list}
 \alias{format.c14_date_list}
 \alias{print.c14_date_list}
+\alias{plot.c14_date_list}
 \title{\strong{c14_date_list}}
 \usage{
 as.c14_date_list(x, ...)
@@ -15,6 +16,8 @@ is.c14_date_list(x, ...)
 \method{format}{c14_date_list}(x, ...)
 
 \method{print}{c14_date_list}(x, ...)
+
+\method{plot}{c14_date_list}(x, ...)
 }
 \arguments{
 \item{x}{an object}
@@ -25,7 +28,7 @@ is.c14_date_list(x, ...)
 The \strong{c14_date_list} is the central data structure of the
 \code{c14bazAAR} package. It's a tibble with set of custom methods and
 variables. Please see the
-\href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+\href{https://github.com/ropensci/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
 table for a description of the variables. Further available variables are ignored. \cr
 If an object is of class data.frame or tibble (tbl & tbl_df), it can be
 converted to an object of class \strong{c14_date_list}. The only requirement
@@ -35,21 +38,11 @@ of the object and applies \code{order_variables()}, \code{enforce_types()} and
 the helper function \code{clean_latlon()} to it.
 }
 \examples{
-# c14_date_list can be crafted manually:
 as.c14_date_list(data.frame(c14age = c(2000, 2500), c14std = c(30, 35)))
-
-# The c14_date_list class is stripped if
-# you apply functions to a c14_date_list
-# that return tibbles or data.frames.
-# You have to add the class again afterwards:
-library(magrittr)
-example_c14_date_list \%>\%
-  dplyr::filter(sourcedb == "CALPAL") \%>\%
-  as.c14_date_list()
-
 is.c14_date_list(5) # FALSE
 is.c14_date_list(example_c14_date_list) # TRUE
 
 print(example_c14_date_list)
+plot(example_c14_date_list)
 
 }

@@ -6,7 +6,7 @@
 #' @description Enforce variable types in a \strong{c14_date_list} and remove
 #' everything that doesn't fit (e.g. text in a number field).
 #' See the
-#' \href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
+#' \href{https://github.com/ropensci/c14bazAAR/blob/master/data-raw/variable_reference.csv}{variable_reference}
 #' table for a documentation of the variable types.
 #' \code{enforce_types()} is called in \code{c14bazAAR::as.c14_date_list()}.
 #'
@@ -16,6 +16,19 @@
 #'
 #' @return an object of class c14_date_list
 #' @export
+#'
+#' @examples
+#' # initial situation
+#' ex <- example_c14_date_list
+#' class(ex$c14age)
+#'
+#' # modify variable/column type
+#' ex$c14age <- as.character(ex$c14age)
+#' class(ex$c14age)
+#'
+#' # fix type with enforce_types()
+#' ex <- enforce_types(ex)
+#' class(ex$c14age)
 #'
 #' @rdname enforce_types
 #'
@@ -42,6 +55,7 @@ enforce_types.c14_date_list <- function(x, suppress_na_introduced_warnings = TRU
   )
   int_cols <- c("c14age", "c14std", "calage", "calstd", "duplicate_group")
   dbl_cols <- c("c13val", "lat", "lon", "coord_precision")
+  date_cols <- c("sourcedb_version")
 
   # transform (invalid values become NA)
   if (suppress_na_introduced_warnings) {
@@ -49,7 +63,8 @@ enforce_types.c14_date_list <- function(x, suppress_na_introduced_warnings = TRU
       x <- x %>%
         dplyr::mutate_if(colnames(.) %in% chr_cols, as.character) %>%
         dplyr::mutate_if(colnames(.) %in% int_cols, as.integer) %>%
-        dplyr::mutate_if(colnames(.) %in% dbl_cols, as.double)
+        dplyr::mutate_if(colnames(.) %in% dbl_cols, as.double) %>%
+        dplyr::mutate_if(colnames(.) %in% date_cols, as.Date)
       },
       warning = na_introduced_warning_handler
     )
@@ -57,7 +72,8 @@ enforce_types.c14_date_list <- function(x, suppress_na_introduced_warnings = TRU
     x <- x %>%
       dplyr::mutate_if(colnames(.) %in% chr_cols, as.character) %>%
       dplyr::mutate_if(colnames(.) %in% int_cols, as.integer) %>%
-      dplyr::mutate_if(colnames(.) %in% dbl_cols, as.double)
+      dplyr::mutate_if(colnames(.) %in% dbl_cols, as.double) %>%
+      dplyr::mutate_if(colnames(.) %in% date_cols, as.Date)
   }
 
   return(x)

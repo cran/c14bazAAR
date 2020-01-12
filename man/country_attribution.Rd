@@ -18,11 +18,9 @@
 \usage{
 determine_country_by_coordinate(x, suppress_spatial_warnings = TRUE)
 
-\method{determine_country_by_coordinate}{default}(x,
-  suppress_spatial_warnings = TRUE)
+\method{determine_country_by_coordinate}{default}(x, suppress_spatial_warnings = TRUE)
 
-\method{determine_country_by_coordinate}{c14_date_list}(x,
-  suppress_spatial_warnings = TRUE)
+\method{determine_country_by_coordinate}{c14_date_list}(x, suppress_spatial_warnings = TRUE)
 
 finalize_country_name(x, quiet = FALSE)
 
@@ -30,16 +28,29 @@ finalize_country_name(x, quiet = FALSE)
 
 \method{finalize_country_name}{c14_date_list}(x, quiet = FALSE)
 
-standardize_country_name(x, country_thesaurus = get_country_thesaurus(),
-  codesets = c("country.name.de", "iso3c"), quiet = FALSE, ...)
-
-\method{standardize_country_name}{default}(x,
+standardize_country_name(
+  x,
   country_thesaurus = get_country_thesaurus(),
-  codesets = c("country.name.de", "iso3c"), quiet = FALSE, ...)
+  codesets = c("country.name.de", "iso3c"),
+  quiet = FALSE,
+  ...
+)
 
-\method{standardize_country_name}{c14_date_list}(x,
+\method{standardize_country_name}{default}(
+  x,
   country_thesaurus = get_country_thesaurus(),
-  codesets = c("country.name.de", "iso3c"), quiet = FALSE, ...)
+  codesets = c("country.name.de", "iso3c"),
+  quiet = FALSE,
+  ...
+)
+
+\method{standardize_country_name}{c14_date_list}(
+  x,
+  country_thesaurus = get_country_thesaurus(),
+  codesets = c("country.name.de", "iso3c"),
+  quiet = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class c14_date_list}
@@ -72,7 +83,7 @@ various terms to represent the same country (for example: United Kingdom, Great 
 GB, etc.). This function aims to standardize the country naming scheme. To achieve this,
 it compares the names to values in an external (\code{countrycode::codelist})
 and an internal
-\href{https://github.com/ISAAKiel/c14bazAAR/blob/master/data-raw/country_thesaurus.csv}{country_thesaurus}
+\href{https://github.com/ropensci/c14bazAAR/blob/master/data-raw/country_thesaurus.csv}{country_thesaurus}
 reference list. The latter needs
 manual curation to catch semantic and spelling errors in the source databases. \cr \cr
 \code{c14bazAAR::determine_country_by_coordinate()} adds the column \strong{country_coord}
